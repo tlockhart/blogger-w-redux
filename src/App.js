@@ -1,5 +1,3 @@
-// import logo from './logo.svg';
-// import './App.css';
 import Post from "./components/Post/Post";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -9,8 +7,14 @@ import {getArticles} from "./redux/actions/index";
 
 
 function App() {
-
+  // look in the store, pull articles from the GLOBAL inital state
   const posts = useSelector((state)=> state.articles);
+
+  // look in the store, pull error message from GLOBAL inital state
+  const error = useSelector((state) => state.error);
+
+  // look in the store, pull loading from GLOBAL inital state
+  const loading = useSelector((state) => state.loading);
 
   //Create dipatch with useDispatch
   const dispatch = useDispatch();
@@ -19,14 +23,14 @@ function App() {
     let response = await axios.get("https://jsonplaceholder.typicode.com/posts");
 
     /* filter unwanted posts */
-    const filteredPosts = response.data.filter(post => post.userId === 1);
-    setMyPosts(filteredPosts);
+    // const filteredPosts = response.data.filter(post => post.userId === 1);
+    // setMyPosts(filteredPosts);
 
     return response;
   }
 
   // const [posts, setPosts] = useState([]);
-  const [myPosts, setMyPosts] = useState([]);
+  // const [myPosts, setMyPosts] = useState([]);
 
   // Call GET_ARTICLES DISPATCHER, when function loads
   useEffect(() => {
@@ -34,6 +38,15 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
+  // if redux store has an error, immediately return the error
+  if (error) {
+    return <h1>{error}</h1>
+  }
+
+  // if redux store has loading value return loading
+  if (loading) {
+    return <h1>Loading...</h1>
+  }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   /*useEffect(async () => {
     try {
